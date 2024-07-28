@@ -4,6 +4,7 @@ const time = std.time;
 const bubble = @import("sort/bubble.zig");
 const selection = @import("sort/selection.zig");
 const insertion = @import("sort/insertion.zig");
+const shell = @import("sort/shell.zig");
 const testing = std.testing;
 
 fn benchmark(comptime T: type, comptime sort_fn: fn (type, []T) void, n: usize, runs: usize) !u64 {
@@ -24,32 +25,19 @@ fn benchmark(comptime T: type, comptime sort_fn: fn (type, []T) void, n: usize, 
     return total_time / runs;
 }
 
-test "bubble sort benchmark" {
+fn run_bench(comptime T: type, comptime sort_fn: fn (type, []T) void, name: []const u8) !void {
     const runs = 10;
     const sizes = [_]usize{ 100, 1000, 10000 };
-    std.debug.print("\nBubble Sort Benchmark:\n", .{});
+    std.debug.print("\n{s} Benchmark:\n", .{name});
     for (sizes) |size| {
-        const avg_time = try benchmark(i64, bubble.sort, size, runs);
+        const avg_time = try benchmark(T, sort_fn, size, runs);
         std.debug.print("Average time for N={d}: {d} ms\n", .{ size, avg_time });
     }
 }
 
-test "selection sort benchmark" {
-    const runs = 10;
-    const sizes = [_]usize{ 100, 1000, 10000 };
-    std.debug.print("\nSelection Sort Benchmark:\n", .{});
-    for (sizes) |size| {
-        const avg_time = try benchmark(i64, selection.sort, size, runs);
-        std.debug.print("Average time for N={d}: {d} ms\n", .{ size, avg_time });
-    }
-}
-
-test "insertion sort benchmark" {
-    const runs = 10;
-    const sizes = [_]usize{ 100, 1000, 10000 };
-    std.debug.print("\nInsertion Sort Benchmark:\n", .{});
-    for (sizes) |size| {
-        const avg_time = try benchmark(i64, insertion.sort, size, runs);
-        std.debug.print("Average time for N={d}: {d} ms\n", .{ size, avg_time });
-    }
+test "sorting benchmarks" {
+    try run_bench(i64, bubble.sort, "Bubble Sort");
+    try run_bench(i64, selection.sort, "Selection Sort");
+    try run_bench(i64, insertion.sort, "Insertion Sort");
+    try run_bench(i64, shell.sort, "Shell Sort");
 }
