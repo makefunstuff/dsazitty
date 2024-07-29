@@ -2,6 +2,7 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const testing = std.testing;
 
+// Linked list based stack implementation
 pub fn Node(comptime T: type) type {
     return struct {
         const Self = @This();
