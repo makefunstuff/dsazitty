@@ -31,8 +31,6 @@ pub fn sort(comptime T: type, arr: []T, allocator: *Allocator) !void {
     const aux = try allocator.alloc(T, arr.len);
     defer allocator.free(aux);
     sort_helper(T, arr, aux, 0, arr.len);
-    std.debug.print("aux: {any}\n", .{aux});
-    std.debug.print("arr: {any}\n", .{arr});
 }
 
 test "optimized merge sort - basic test" {
